@@ -1,0 +1,28 @@
+version: '2'
+services:
+
+  web:
+    container_name: mqtt-api
+    build: docker/node
+    ports:
+      - "1883:1883"
+      - "5859:5859"
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_DSN=mongodb://database:27017/mqtt
+      - DATABASE_HOST=database
+      - DATABASE_PORT=27017
+    volumes:
+      - .:/src:cached
+    links:
+      - database
+
+  database:
+    image: mongo
+    container_name: mqtt-database
+    restart: always
+    ports:
+     - 3002:27017
+    volumes:
+     - ./.data/mongo:/data/db
